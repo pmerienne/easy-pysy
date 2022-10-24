@@ -5,3 +5,5 @@ from .event import Event, on, emit
 from .loop import loop
 from .cli import command
 from .utils import require, uuid, tri_wave, float_range, retry, IntSequence
+from easy_pysi.functional import magic
+from easy_pysi.functional.function import bind
