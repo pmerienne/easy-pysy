@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TypeVar, Type, Callable
+from typing import TypeVar, Type, Callable, Generic, Any
 
 from easy_pysi.utils import require
 from easy_pysi.plugin import Plugin
@@ -10,7 +10,7 @@ ProviderFactory = Callable[[], T]
 
 
 @dataclass
-class Provider:
+class Provider(Generic[T]):
     type: Type[T]
     factory: ProviderFactory
     singleton: bool
@@ -20,8 +20,8 @@ _all_providers: list[Provider] = []
 
 
 class ProviderPlugin(Plugin):
-    providers: dict[Type[T], Provider] = {}
-    singletons: dict[Type[T], T] = {}
+    providers: dict[Type, Provider] = {}
+    singletons: dict[Type, Any] = {}
 
     def start(self):
         self.providers = {

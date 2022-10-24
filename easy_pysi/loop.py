@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Loop:
-    interval_ms: 1000
+    interval_ms: int
     callback: Callable
     stop_app_on_error: bool
     auto_start: bool
@@ -63,6 +63,7 @@ class LoopPlugin(Plugin):
         for loop in self.loops:
             if loop.callback == callback:
                 return loop
+        return None
 
 
 _ALL_LOOPS: list[Loop] = []
