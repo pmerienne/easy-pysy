@@ -64,6 +64,8 @@ class App:
         require(self.state == AppState.STARTED, f"Can't stop application, current state: {self.state}")
         logger.info(f'Stopping {self}')
         self.state = AppState.STOPPING
+        emit(AppStopping(self))
+
         for plugin in self.plugins:
             plugin.stop()
 
@@ -88,6 +90,11 @@ class App:
 
 @dataclass
 class AppStarted(Event):
+    app: App
+
+
+@dataclass
+class AppStopping(Event):
     app: App
 
 

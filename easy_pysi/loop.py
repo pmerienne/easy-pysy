@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass
 from typing import Callable, Optional
 
-import easy_pysi
+import easy_pysi as ez
 from easy_pysi.plugin import Plugin
 from easy_pysi.utils import Interval
 
@@ -27,9 +27,9 @@ class Loop:
         self.interval = None
 
     def on_error(self, exception: BaseException):
-        logger.error(f'Loop execution failed: {exception}')
+        logger.exception(f'Loop execution failed: {exception}')
         if self.stop_app_on_error:
-            easy_pysi.current_app().stop()
+            ez.shutdown()
 
     @property
     def running(self):
