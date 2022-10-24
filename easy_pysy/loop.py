@@ -2,9 +2,9 @@ import logging
 from dataclasses import dataclass
 from typing import Callable, Optional
 
-import easy_pysi as ez
-from easy_pysi.plugin import Plugin
-from easy_pysi.utils import Interval
+import easy_pysy as ez
+from easy_pysy.plugin import Plugin
+from easy_pysy.utils import Interval
 
 
 logger = logging.getLogger(__name__)

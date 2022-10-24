@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from threading import Thread
 from typing import Type, Callable
 
-import easy_pysi as ez
-from easy_pysi.plugin import Plugin
+import easy_pysy as ez
+from easy_pysy.plugin import Plugin
 
 
 class Event:

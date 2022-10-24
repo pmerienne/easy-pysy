@@ -1,7 +1,7 @@
 import time
 from dataclasses import dataclass
 
-from easy_pysi import on, emit, Event
+from easy_pysy import on, emit, Event
 
 COUNTERS = {"sync": 0, "async": 0}
 

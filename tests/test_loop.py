@@ -1,8 +1,8 @@
 import time
 
-import easy_pysi as ez
-from easy_pysi.core import AppState
-from easy_pysi.loop import LoopPlugin
+import easy_pysy as ez
+from easy_pysy.core import AppState
+from easy_pysy.loop import LoopPlugin
 
 TIMES = {}
 STATE = None

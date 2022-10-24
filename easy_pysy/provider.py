@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import TypeVar, Type, Callable, Generic, Any
 
-from easy_pysi.utils import require
-from easy_pysi.plugin import Plugin
-import easy_pysi as ez
+from easy_pysy.utils import require
+from easy_pysy.plugin import Plugin
+import easy_pysy as ez
 
 T = TypeVar('T')
 ProviderFactory = Callable[[], T]

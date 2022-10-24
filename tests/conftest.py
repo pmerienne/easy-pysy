@@ -1,8 +1,8 @@
 import pytest
 from _pytest.fixtures import FixtureRequest
 
-import easy_pysi as ez
-from easy_pysi.core import AppState
+import easy_pysy as ez
+from easy_pysy.core import AppState
 
 
 def create_app(request, *args, **kwargs):

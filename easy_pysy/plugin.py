@@ -1,7 +1,7 @@
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from easy_pysi.core import App
+    from easy_pysy.core import App
 
 
 class Plugin:

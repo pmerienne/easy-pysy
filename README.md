@@ -3,7 +3,6 @@ easy-pysy
 
 # TODO:
 ## Features
-- [ ] Typo easy_pysi => easy_pysy
 - [ ] config before init ?
 - [ ] logger
 - [ ] repo

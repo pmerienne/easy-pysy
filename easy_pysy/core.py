@@ -7,14 +7,14 @@ from pathlib import Path
 from types import ModuleType
 from typing import Type, TypeVar
 
-from easy_pysi import signal
-from easy_pysi.cli import run_cli
-from easy_pysi.configuration import ConfigurationPlugin
-from easy_pysi.event import Event, emit, EventPlugin
-from easy_pysi.loop import LoopPlugin
-from easy_pysi.plugin import Plugin
-from easy_pysi.provider import ProviderPlugin
-from easy_pysi.utils import require
+from easy_pysy import signal
+from easy_pysy.cli import run_cli
+from easy_pysy.configuration import ConfigurationPlugin
+from easy_pysy.event import Event, emit, EventPlugin
+from easy_pysy.loop import LoopPlugin
+from easy_pysy.plugin import Plugin
+from easy_pysy.provider import ProviderPlugin
+from easy_pysy.utils import require
 
 logger = logging.getLogger(__name__)
 

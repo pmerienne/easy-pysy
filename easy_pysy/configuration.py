@@ -5,7 +5,7 @@ from typing import Type, cast
 import pendulum
 from dotenv import load_dotenv
 
-from easy_pysi.plugin import Plugin
+from easy_pysy.plugin import Plugin
 
 
 SupportedTypes = str | int | float | bool | datetime | date  # TODO: Bad typing

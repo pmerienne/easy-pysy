@@ -1,5 +1,5 @@
-import easy_pysi as ez
-from easy_pysi import require
+import easy_pysy as ez
+from easy_pysy import require
 from tests.woofer import Woofer
 
 

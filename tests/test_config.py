@@ -3,7 +3,7 @@ from datetime import datetime, date
 import pytest
 from pendulum.tz.timezone import Timezone
 
-import easy_pysi as ez
+import easy_pysy as ez
 
 
 @pytest.mark.ez_app(dotenv_path='test_config.env')

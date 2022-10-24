@@ -2,7 +2,7 @@ import sys
 
 import pytest
 
-import easy_pysi as ez
+import easy_pysy as ez
 from tests.woofer import bar_woofer, foo_woofer, Woofer
 
 

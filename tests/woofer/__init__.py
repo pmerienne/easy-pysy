@@ -1,4 +1,4 @@
-import easy_pysi as ez
+import easy_pysy as ez
 
 
 class Woofer:
