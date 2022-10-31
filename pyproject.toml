@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "easy-pysy"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Pierre Merienne <pierre.merienne@gmail.com>"]
 packages = [
