@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from threading import Thread
-from typing import Type, Callable
+from typing import Type, Callable, TypeVar
 
 from easy_pysy.core.configuration import config
 from easy_pysy.core.logging import logger
@@ -8,6 +8,7 @@ from easy_pysy.utils.common import require
 from easy_pysy.utils.functional import EzList
 from easy_pysy.utils.inspect import qual_name
 from easy_pysy.utils.model import PropertyBaseModel
+
 
 log_file = config('ez.core.event.log_file')
 storage = config('ez.core.event.storage', config_type=bool, default=False)
@@ -77,6 +78,9 @@ def _async_notify_subscriber(event: Event, subscriber: EventSubscriber):
     thread.start()
 
 
-def find_by_type(event_type: Type[Event]):
+EventType = TypeVar('EventType', bound=Type[Event])
+
+
+def find_by_type(event_type: EventType) -> EzList[EventType]:
     require(storage, "Storage is not activated. Activate it with env: ez.core.event.storage=True")
     return events.filter(lambda event: isinstance(event, event_type))

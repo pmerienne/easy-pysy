@@ -1,7 +1,7 @@
 import time
 
 import easy_pysy as ez
-from easy_pysy.core.app import AppState
+from easy_pysy.core.lifecycle import AppState
 
 TIMES = {}
 STATE = None

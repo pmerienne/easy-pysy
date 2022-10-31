@@ -1,14 +1,10 @@
 import enum
 from dataclasses import dataclass
-from typing import TypeVar
 
 from easy_pysy.core import logging
-from easy_pysy.core import signal
-from easy_pysy.core.cli import run_cli
 from easy_pysy.core.event import Event, emit
+from easy_pysy.core.signal import sigint_callback
 from easy_pysy.utils.common import require
-
-T = TypeVar('T')
 
 
 class AppState(enum.Enum):
@@ -47,10 +43,10 @@ def stop():
     context.state = AppState.STOPPED
 
 
-def run(auto_start=True):
-    if auto_start and context.state == AppState.STOPPED:
-        start()
-    run_cli()
+@sigint_callback
+def shutdown(exit_code=0):
+    stop()
+    exit(exit_code)
 
 
 @dataclass
@@ -68,9 +64,3 @@ class AppStopping(Event):
     pass
 
 
-def shutdown(exit_code=0):
-    stop()
-    exit(exit_code)
-
-
-signal.sigint_callback = shutdown

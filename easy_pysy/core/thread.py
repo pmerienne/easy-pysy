@@ -5,7 +5,7 @@ from typing import Callable, Optional
 from easy_pysy.utils.common import require
 from easy_pysy.core.configuration import config
 from easy_pysy.core.logging import logger
-from easy_pysy.core.app import AppStopping
+from easy_pysy.core.lifecycle import AppStopping
 from easy_pysy.core.event import on
 
 stop_timeout = config('ez.thread.stop_timeout', config_type=int, default=1)
