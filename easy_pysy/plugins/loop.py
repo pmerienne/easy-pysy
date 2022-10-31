@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Callable, Optional
 
 import easy_pysy as ez
-from easy_pysy.utils.common import Interval
+from easy_pysy import Interval
 
 
 @dataclass
@@ -14,11 +14,12 @@ class Loop:
     interval: Optional[Interval] = None
 
     def start(self):
+        ez.require(not self.interval, "Loop is already running")
         self.interval = Interval(self.interval_ms, self.callback, self.on_error)
         self.interval.start()
 
     def stop(self):
-        self.interval.stop()
+        self.interval.cancel()
         self.interval = None
 
     def on_error(self, exception: BaseException):
@@ -28,7 +29,7 @@ class Loop:
 
     @property
     def running(self):
-        return self.interval is not None
+        return self.interval is not None and self.interval.is_alive()
 
 
 loops: list[Loop] = []

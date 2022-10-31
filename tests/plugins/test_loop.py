@@ -14,11 +14,13 @@ def increase():
 
 @ez.loop(every_ms=200, stop_app_on_error=True, auto_start=False)
 def will_raise_and_stop_app():
+    ez.info('I will raise and stop')
     raise RuntimeError()
 
 
 @ez.loop(every_ms=200, stop_app_on_error=False, auto_start=False)
 def will_raise_and_not_stop_app():
+    ez.info('I will raise but not stop')
     raise RuntimeError()
 
 

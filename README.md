@@ -4,9 +4,6 @@ easy-pysy
 # TODO:
 ## Features
 - [ ] Doc : purpose, roadmap
-- [ ] File structure : core vs plugin
-- [ ] config before init ?
-- [ ] logger
 - [ ] repo
 - [ ] Daemon vs Run vs Start
 
