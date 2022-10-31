@@ -1,18 +1,18 @@
-import logging
 import signal
 from typing import Callable, Optional
 
-logger = logging.getLogger(__name__)
+from easy_pysy.core import logging
+
 exiting = False
 sigint_callback: Optional[Callable[[int], None]] = None
 
 
 def _sigint_handler(signum, frame):
-    logger.info(f'Received sigint: {signum}')
+    logging.info(f'Received sigint: {signum}')
 
     global exiting
     if exiting:
-        logger.warning('Double sigint received, forcing exit')
+        logging.warning('Double sigint received, forcing exit')
         exit(1)
 
     exiting = True

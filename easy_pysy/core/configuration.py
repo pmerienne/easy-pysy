@@ -1,4 +1,3 @@
-import logging
 import os
 from datetime import datetime, date
 from pathlib import Path
@@ -7,13 +6,14 @@ from typing import Type, cast
 import pendulum
 from dotenv import load_dotenv
 
+from easy_pysy.core import logging
+
 # TODO: dict and list
-logger = logging.getLogger(__name__)
 SupportedTypes = str | int | float | bool | datetime | date
 dotenv_path = os.getenv('DOTENV_PATH')
 dotenv_path = Path(dotenv_path) if dotenv_path else Path(os.getcwd(), '.env').resolve()
 
-logger.info(f'Loading dotenv from {dotenv_path}')
+logging.info(f'Loading dotenv from {dotenv_path}')
 load_dotenv(dotenv_path)
 
 

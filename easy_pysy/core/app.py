@@ -1,15 +1,12 @@
 import enum
-import logging
 from dataclasses import dataclass
 from typing import TypeVar
 
+from easy_pysy.core import logging
 from easy_pysy.core import signal
 from easy_pysy.core.cli import run_cli
 from easy_pysy.core.event import Event, emit
 from easy_pysy.utils.common import require
-
-logging.basicConfig(level=logging.INFO)  # TODO: where ?
-logger = logging.getLogger(__name__)
 
 T = TypeVar('T')
 
@@ -31,22 +28,22 @@ context = EzContext()
 def start():
     require(context.state == AppState.STOPPED, f"Can't start application, current state: {context.state}]")
 
-    logger.info('Starting')
+    logging.info('Starting')
     context.state = AppState.STARTING
     emit(AppStarting())
 
-    logger.info('Started')
+    logging.info('Started')
     context.state = AppState.STARTED
     emit(AppStarted())
 
 
 def stop():
     require(context.state == AppState.STARTED, f"Can't stop application, current state: {context.state}")
-    logger.info(f'Stopping')
+    logging.info(f'Stopping')
     context.state = AppState.STOPPING
     emit(AppStopping())
 
-    logger.info('Stopped')
+    logging.info('Stopped')
     context.state = AppState.STOPPED
 
 

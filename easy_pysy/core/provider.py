@@ -1,10 +1,9 @@
-import logging
 from dataclasses import dataclass
 from typing import TypeVar, Type, Callable, Generic, Any
 
 import easy_pysy.utils.decorators
+from easy_pysy.core import logging
 
-logger = logging.getLogger(__name__)
 T = TypeVar('T')
 ProviderFactory = Callable[[], T]
 
@@ -28,7 +27,7 @@ def provide(type: Type[T], singleton: bool = False):
             providers[type] = [new_provider]
         else:
             providers[type].append(new_provider)
-            logger.warning(f'Multiple providers defined for {type}: {providers[type]}')
+            logging.warning(f'Multiple providers defined for {type}: {providers[type]}')
 
         return func
     return decorator

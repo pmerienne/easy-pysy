@@ -1,11 +1,8 @@
-import logging
 from dataclasses import dataclass
 from typing import Callable, Optional
 
 import easy_pysy as ez
 from easy_pysy.utils.common import Interval
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -25,7 +22,7 @@ class Loop:
         self.interval = None
 
     def on_error(self, exception: BaseException):
-        logger.exception(f'Loop execution failed: {exception}')
+        ez.exception(f'Loop execution failed: {exception}')
         if self.stop_app_on_error:
             ez.shutdown()
 
@@ -41,7 +38,7 @@ loops: list[Loop] = []
 def start(event: ez.AppStarting):
     for loop in loops:
         if loop.auto_start:
-            logger.debug(f'Starting {loop}')
+            ez.debug(f'Starting {loop}')
             loop.start()
 
 
