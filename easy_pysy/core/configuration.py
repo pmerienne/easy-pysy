@@ -1,20 +1,18 @@
 import os
 from datetime import datetime, date
-from pathlib import Path
 from typing import Type, cast
 
 import pendulum
-from dotenv import load_dotenv
-
-from easy_pysy.core import logging
+from dotenv import load_dotenv, find_dotenv
 
 # TODO: dict and list
 SupportedTypes = str | int | float | bool | datetime | date
-dotenv_path = os.getenv('DOTENV_PATH')
-dotenv_path = Path(dotenv_path) if dotenv_path else Path(os.getcwd(), '.env').resolve()
 
-logging.info(f'Loading dotenv from {dotenv_path}')
-load_dotenv(dotenv_path)
+dotenv_path = os.getenv('DOTENV_PATH') or find_dotenv(usecwd=True)
+loaded = load_dotenv(dotenv_path)
+
+if not loaded:
+    raise RuntimeError('Not loaded')
 
 
 def config(key: str, config_type: Type[SupportedTypes] = str, default=None, raise_if_not_found=False) -> SupportedTypes:

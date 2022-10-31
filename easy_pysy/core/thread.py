@@ -1,9 +1,14 @@
+import time
 from threading import Thread, Event, Timer
 from typing import Callable, Optional
 
-import easy_pysy as ez
+from easy_pysy.utils.common import require
+from easy_pysy.core.configuration import config
+from easy_pysy.core.logging import logger
+from easy_pysy.core.app import AppStopping
+from easy_pysy.core.event import on
 
-stop_timeout = ez.config('ez.thread.stop_timeout', config_type=int, default=1)
+stop_timeout = config('ez.thread.stop_timeout', config_type=int, default=1)
 
 
 class EzThread(Thread):  # TODO: test
@@ -15,13 +20,13 @@ class EzThread(Thread):  # TODO: test
         self.target = target
 
     def start(self):
-        ez.require(not self.is_alive(), 'Interval already started')
+        require(not self.is_alive(), 'Interval already started')
         self.stop_event.clear()
-        threads.add(self)
+        threads.append(self)
         super().start()
 
     def stop(self, timeout=10):
-        ez.require(self.is_alive(), 'Thread already stopped')
+        require(self.is_alive(), 'Thread already stopped')
         self.stop_event.set()
         self.join(timeout)
 
@@ -35,9 +40,6 @@ class EzThread(Thread):  # TODO: test
         else:
             threads.remove(self)
 
-    def callback(self):
-        return self._target
-
 
 class Interval(Timer):
     def __init__(self, interval_ms, function, on_error, args=(), kwargs=None):
@@ -50,11 +52,16 @@ class Interval(Timer):
         self.on_error = on_error
 
     def run(self):
-        while not self.finished.wait(self.interval):
+        next_time = time.time() + self.interval
+        wait_time = next_time - time.time()
+        while not self.finished.wait(wait_time):
             try:
+                next_time += self.interval
                 self.function(*self.args, **self.kwargs)
+                wait_time = next_time - time.time()
             except BaseException as exc:
                 self.on_error(exc)
+                wait_time = next_time - time.time()
 
 
 class ZombieThread(Exception):
@@ -71,9 +78,9 @@ def get_thread(target: Callable) -> Optional[EzThread]:
     return None
 
 
-@ez.on(ez.AppStopping)
-def on_stop(event: ez.AppStopping):
-    ez.debug('Stopping threads')
+@on(AppStopping)
+def on_stop(event: AppStopping):
+    logger.debug('Stopping threads')
     while threads:
         running_threads = [thread for thread in threads if thread.is_alive()]
         # Optimization: instead of calling stop() which implicitly calls
@@ -82,6 +89,6 @@ def on_stop(event: ez.AppStopping):
         for thread in running_threads:
             thread.stop_event.set()
         for thread in running_threads:
-            ez.debug(f'Stopping thread: {thread}')
+            logger.debug(f'Stopping thread: {thread}')
             thread.join(stop_timeout)
-    ez.debug('Threads stopped')
+    logger.debug('Threads stopped')

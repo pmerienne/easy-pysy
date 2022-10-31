@@ -5,6 +5,9 @@ import easy_pysy as ez
 from easy_pysy.core.app import AppState
 
 
+events = ez.EzList[ez.Event]()
+
+
 @pytest.fixture
 def ez_app(request: FixtureRequest):
     ez.start()
@@ -13,3 +16,11 @@ def ez_app(request: FixtureRequest):
         ez.stop()
 
 
+@ez.on(ez.Event)
+def log_event(event: ez.Event):
+    events.append(event)
+
+
+@ez.on(ez.AppStopping)
+def clear_on_stop(event: ez.AppStopping):
+    events.clear()

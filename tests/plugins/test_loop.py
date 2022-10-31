@@ -9,7 +9,9 @@ STATE = None
 
 @ez.loop(every_ms=200)
 def increase():
+    ez.info(f'Increase')
     TIMES[time.time()] = 42
+    time.sleep(0.100)  # Really useful to ensure intervals are not shifting
 
 
 @ez.loop(every_ms=200, stop_app_on_error=True, auto_start=False)
@@ -26,7 +28,7 @@ def will_raise_and_not_stop_app():
 
 def test_loop_should_call_every_ms(ez_app):
     TIMES.clear()
-    time.sleep(1.0)
+    time.sleep(1.010)
     assert len(TIMES) == 5
 
 
@@ -39,7 +41,7 @@ def test_stop_start_loop(ez_app):
     assert len(TIMES) == 0
 
     loop.start()
-    time.sleep(1.0)
+    time.sleep(1.010)
     assert len(TIMES) == 5
 
 

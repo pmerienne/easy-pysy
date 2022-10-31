@@ -2,9 +2,25 @@ from dataclasses import dataclass
 from threading import Thread
 from typing import Type, Callable
 
+from easy_pysy.core.configuration import config
+from easy_pysy.core.logging import logger
+from easy_pysy.utils.common import require
+from easy_pysy.utils.functional import EzList
+from easy_pysy.utils.inspect import qual_name
+from easy_pysy.utils.model import PropertyBaseModel
 
-class Event:
-    pass
+log_file = config('ez.core.event.log_file')
+storage = config('ez.core.event.storage', config_type=bool, default=False)
+
+
+if log_file:
+    logger.add(log_file, format="{message}", filter=__name__, level="DEBUG")
+
+
+class Event(PropertyBaseModel):
+    @property
+    def event_type(self):
+        return qual_name(self)
 
 
 @dataclass
@@ -14,6 +30,7 @@ class EventSubscriber:
     asynchronous: bool
 
 
+events = EzList[Event]()
 subscribers: list[EventSubscriber] = []
 
 
@@ -29,6 +46,11 @@ def on(*event_types: Type[Event], asynchronous=False):
 
 def emit(event: Event):
     event_type = type(event)
+
+    if log_file:
+        logger.info(event.dict())
+    if storage:
+        events.append(event)
 
     # Synchronous event
     for subscriber in _get_subscribers(event_type):
@@ -54,3 +76,7 @@ def _async_notify_subscriber(event: Event, subscriber: EventSubscriber):
     thread = Thread(target=_notify_subscriber, args=(event, subscriber), daemon=True)
     thread.start()
 
+
+def find_by_type(event_type: Type[Event]):
+    require(storage, "Storage is not activated. Activate it with env: ez.core.event.storage=True")
+    return events.filter(lambda event: isinstance(event, event_type))
