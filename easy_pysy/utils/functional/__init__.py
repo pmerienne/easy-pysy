@@ -1,5 +1,6 @@
-from easy_pysy.functional.dictionary import EzDict, K, V
-from easy_pysy.functional.sequence import EzList, T, U
+from easy_pysy.utils.functional.dictionary import EzDict, K, V
+from easy_pysy.utils.functional.sequence import EzList, T
+from easy_pysy.utils.functional.function import bind, bind_all
 
 
 def magic(value: list[T] | dict[K, V]) -> EzList[T] | EzDict[K, V]:  # TODO: iterable/sequence

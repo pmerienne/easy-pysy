@@ -1,14 +1,15 @@
 import logging
 import threading
 import time
-from functools import wraps
 
-from typing import Optional, Type
+from typing import Optional
 from uuid import uuid4
+
 
 logger = logging.getLogger(__name__)
 
 
+# TODO: create an EzThread
 class Interval:
     def __init__(self, interval_ms, callback, on_error_callback, daemon=True, *args, **kwargs):
         self.interval_ms = interval_ms
@@ -45,6 +46,10 @@ class Interval:
         return self.interval_ms / 1000.0
 
 
+def uuid() -> str:
+    return str(uuid4())
+
+
 def require(condition: bool, message: Optional[str] = None):
     if not condition:
         raise RequirementError(message)
@@ -54,48 +59,9 @@ class RequirementError(Exception):
     pass
 
 
-def uuid() -> str:
-    return str(uuid4())
-
-
-def tri_wave(min_value: int, max_value: int, step: int = 1):
-    while True:
-        yield from range(min_value, max_value, step)
-        yield from range(max_value, min_value, -step)
-
-
-def float_range(start: float, stop: float, step: float = 1.0, decimals: int = 2):
-    for i in range(int(start / step), int(stop / step)):
-        yield round(i * step, ndigits=decimals)
-
-
-def retry(times: int, exception_class: Type = BaseException, sleep=0):
-    require(times >= 1, "times should be >= in @retry")
-
-    def decorated(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            attempt = 1
-            last_exception = None
-            while attempt <= times:
-                try:
-                    return func(*args, **kwargs)
-                except exception_class as exc:
-                    logger.exception(f'Execution of {func} failed (attempt: {attempt}/{times})')
-                    attempt += 1
-                    last_exception = exc
-                    if attempt <= times:
-                        logger.debug(f'Will retry in {sleep} seconds')
-                        time.sleep(sleep)
-                    else:
-                        raise exc
-            raise last_exception
-        return wrapper
-    return decorated
-
-
 class IntSequence:
     _last_id = 0
+
     def create_new_id(self) -> int:
         self._last_id += 1
         return self._last_id

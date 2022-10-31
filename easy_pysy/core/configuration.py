@@ -1,21 +1,20 @@
+import logging
 import os
 from datetime import datetime, date
+from pathlib import Path
 from typing import Type, cast
 
 import pendulum
 from dotenv import load_dotenv
 
-from easy_pysy.plugin import Plugin
-
-
-SupportedTypes = str | int | float | bool | datetime | date  # TODO: Bad typing
 # TODO: dict and list
+logger = logging.getLogger(__name__)
+SupportedTypes = str | int | float | bool | datetime | date
+dotenv_path = os.getenv('DOTENV_PATH')
+dotenv_path = Path(dotenv_path) if dotenv_path else Path(os.getcwd(), '.env').resolve()
 
-
-class ConfigurationPlugin(Plugin):
-    def init(self, app):
-        super().init(app)
-        load_dotenv(app.dotenv_path)
+logger.info(f'Loading dotenv from {dotenv_path}')
+load_dotenv(dotenv_path)
 
 
 def config(key: str, config_type: Type[SupportedTypes] = str, default=None, raise_if_not_found=False) -> SupportedTypes:

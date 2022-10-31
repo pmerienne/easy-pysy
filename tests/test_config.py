@@ -1,12 +1,10 @@
 from datetime import datetime, date
 
-import pytest
 from pendulum.tz.timezone import Timezone
 
 import easy_pysy as ez
 
 
-@pytest.mark.ez_app(dotenv_path='test_config.env')
 def test_config(ez_app):
     assert ez.config('FOO') == 'BAR'
     assert ez.config('FORTY_TWO', config_type=int) == 42

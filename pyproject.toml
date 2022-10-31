@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "easy-pysy"
-version = "0.0.6"
+version = "0.1.0"
 description = ""
 authors = ["Pierre Merienne <pierre.merienne@gmail.com>"]
 packages = [
-    { include = "easy_pysi" },
+    { include = "easy_pysy" },
 ]
 
 
@@ -21,8 +21,8 @@ pendulum = "^2.1.2"
 pytest = "^7.1.3"
 mypy = "^0.971"
 
-[tool.poetry.scripts]
-ez = 'easy_pysi.console:main'
+# [tool.poetry.scripts]
+# ez = 'easy_pysy.console:main'
 
 [tool.mypy]
 python_version = 3.10

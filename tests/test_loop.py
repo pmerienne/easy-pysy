@@ -1,8 +1,7 @@
 import time
 
 import easy_pysy as ez
-from easy_pysy.core import AppState
-from easy_pysy.loop import LoopPlugin
+from easy_pysy.core.app import AppState
 
 TIMES = {}
 STATE = None
@@ -24,34 +23,35 @@ def will_raise_and_not_stop_app():
 
 
 def test_loop_should_call_every_ms(ez_app):
+    TIMES.clear()
     time.sleep(1.0)
     assert len(TIMES) == 5
 
 
 def test_stop_start_loop(ez_app):
-    last_time = len(TIMES)
-    loop = ez.plugin(LoopPlugin).get_loop(increase)
-
+    loop = ez.get_loop(increase)
     loop.stop()
+    TIMES.clear()
+
     time.sleep(1.0)
-    assert len(TIMES) == last_time
+    assert len(TIMES) == 0
 
     loop.start()
     time.sleep(1.0)
-    assert len(TIMES) == last_time + 5
+    assert len(TIMES) == 5
 
 
 def test_should_stop_app_on_error(ez_app):
-    loop = ez.plugin(LoopPlugin).get_loop(will_raise_and_stop_app)
+    loop = ez.get_loop(will_raise_and_stop_app)
     loop.start()
     time.sleep(0.3)
 
-    assert ez_app.state == AppState.STOPPED
+    assert ez.context.state == AppState.STOPPED
 
 
 def test_should_not_stop_app_on_error(ez_app):
-    loop = ez.plugin(LoopPlugin).get_loop(will_raise_and_not_stop_app)
+    loop = ez.get_loop(will_raise_and_not_stop_app)
     loop.start()
     time.sleep(0.3)
 
-    assert ez_app.state == AppState.STARTED
+    assert ez.context.state == AppState.STARTED

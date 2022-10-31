@@ -2,9 +2,6 @@ from dataclasses import dataclass
 from threading import Thread
 from typing import Type, Callable
 
-import easy_pysy as ez
-from easy_pysy.plugin import Plugin
-
 
 class Event:
     pass
@@ -17,18 +14,7 @@ class EventSubscriber:
     asynchronous: bool
 
 
-class EventPlugin(Plugin):
-    subscribers: list[EventSubscriber] = []
-
-    def start(self):
-        self.subscribers = [
-            subscriber
-            for subscriber in _ALL_SUBSCRIBERS
-            if self.app.is_available(subscriber.callback)
-        ]
-
-
-_ALL_SUBSCRIBERS: list[EventSubscriber] = []
+subscribers: list[EventSubscriber] = []
 
 
 def on(*event_types: Type[Event], asynchronous=False):
@@ -36,7 +22,7 @@ def on(*event_types: Type[Event], asynchronous=False):
     def decorator(func):
         for event_type in event_types:
             subscriber = EventSubscriber(func, event_type, asynchronous)
-            _ALL_SUBSCRIBERS.append(subscriber)
+            subscribers.append(subscriber)
         return func
     return decorator
 
@@ -53,10 +39,9 @@ def emit(event: Event):
 
 
 def _get_subscribers(event_type: Type[Event]) -> list[EventSubscriber]:
-    available_subscribers = ez.plugin(EventPlugin).subscribers
     return [
         subscriber
-        for subscriber in available_subscribers
+        for subscriber in subscribers
         if issubclass(event_type, subscriber.event_type)
     ]
 

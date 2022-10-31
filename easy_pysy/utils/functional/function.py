@@ -1,7 +1,6 @@
 from functools import partial
 from typing import Callable, TypeVar, Any
 
-from mypy_extensions import VarArg
 
 T = TypeVar('T')
 
