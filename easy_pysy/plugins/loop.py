@@ -17,10 +17,12 @@ class Loop:
         ez.require(not self.interval, "Loop is already running")
         self.interval = Interval(self.interval_ms, self.callback, self.on_error)
         self.interval.start()
+        ez.emit(LoopStarted(loop=self))
 
     def stop(self):
         self.interval.cancel()
         self.interval = None
+        ez.emit(LoopStopped(loop=self))
 
     def on_error(self, exception: BaseException):
         ez.exception(f'Loop execution failed: {exception}')
@@ -30,6 +32,14 @@ class Loop:
     @property
     def running(self):
         return self.interval is not None and self.interval.is_alive()
+
+
+class LoopStarted(ez.Event):
+    loop: Loop
+
+
+class LoopStopped(ez.Event):
+    loop: Loop
 
 
 loops: list[Loop] = []

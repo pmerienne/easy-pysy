@@ -23,6 +23,9 @@ class Event(PropertyBaseModel):
     def event_type(self):
         return qual_name(self)
 
+    class Config:
+        arbitrary_types_allowed = True
+
 
 @dataclass
 class EventSubscriber:
