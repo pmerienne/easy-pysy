@@ -1,12 +1,12 @@
 import os
 from datetime import datetime, date
-from typing import Type, cast
+from typing import Type, cast, Union
 
 import pendulum
 from dotenv import load_dotenv, find_dotenv
 
 # TODO: dict and list
-SupportedTypes = str | int | float | bool | datetime | date
+SupportedTypes = Union[str, int, float, bool, datetime, date]
 
 dotenv_path = os.getenv('DOTENV_PATH') or find_dotenv(usecwd=True)
 loaded = load_dotenv(dotenv_path)
