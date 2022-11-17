@@ -13,3 +13,4 @@ from easy_pysy.utils.decorators import require
 from easy_pysy.utils.decorators import retry
 from easy_pysy.utils.functional import magic, bind, bind_all, EzList, EzDict
 from easy_pysy.utils.generators import tri_wave, float_range
+from easy_pysy.utils.markdown import read_md_table

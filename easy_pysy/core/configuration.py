@@ -11,9 +11,6 @@ SupportedTypes = str | int | float | bool | datetime | date
 dotenv_path = os.getenv('DOTENV_PATH') or find_dotenv(usecwd=True)
 loaded = load_dotenv(dotenv_path)
 
-if not loaded:
-    raise RuntimeError('Not loaded')
-
 
 def config(key: str, config_type: Type[SupportedTypes] = str, default=None, raise_if_not_found=False) -> SupportedTypes:
     raw = os.getenv(key)
