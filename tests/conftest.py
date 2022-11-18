@@ -5,7 +5,7 @@ import easy_pysy as ez
 from easy_pysy.core.lifecycle import AppState
 
 
-events = ez.EzList[ez.Event]()
+events = ez.List[ez.Event]()
 
 
 @pytest.fixture

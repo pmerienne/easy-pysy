@@ -5,7 +5,7 @@ from typing import Type, Callable, TypeVar
 from easy_pysy.core.configuration import config
 from easy_pysy.core.logging import logger
 from easy_pysy.utils.common import require
-from easy_pysy.utils.functional import EzList
+from easy_pysy.utils.functional.iterable import List
 from easy_pysy.utils.inspect import qual_name
 from easy_pysy.utils.model import PropertyBaseModel
 
@@ -34,7 +34,7 @@ class EventSubscriber:
     asynchronous: bool
 
 
-events = EzList[Event]()
+events = List[Event]()
 subscribers: list[EventSubscriber] = []
 
 
@@ -84,6 +84,6 @@ def _async_notify_subscriber(event: Event, subscriber: EventSubscriber):
 EventType = TypeVar('EventType', bound=Type[Event])
 
 
-def find_by_type(event_type: EventType) -> EzList[EventType]:
+def find_by_type(event_type: EventType) -> List[EventType]:
     require(storage, "Storage is not activated. Activate it with env: ez.core.event.storage=True")
     return events.filter(lambda event: isinstance(event, event_type))
