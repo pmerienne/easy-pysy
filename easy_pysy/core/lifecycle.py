@@ -34,9 +34,14 @@ def start():
 
 def stop():
     require(context.state == AppState.STARTED, f"Can't stop application, current state: {context.state}")
-    logging.info(f'Stopping')
-    context.state = AppState.STOPPING
-    emit(AppStopping())
+
+
+    try:
+        logging.info(f'Stopping')
+        context.state = AppState.STOPPING
+        emit(AppStopping())
+    except BaseException:
+        logging.exception('Error while stopping application ! Some AppStopping subscribers may not have been called')
 
     logging.info('Stopped')
     context.state = AppState.STOPPED
