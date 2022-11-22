@@ -1,5 +1,4 @@
 import enum
-from dataclasses import dataclass
 
 from easy_pysy.core import logging
 from easy_pysy.core.event import Event, emit
@@ -49,17 +48,14 @@ def shutdown(exit_code=0):
     exit(exit_code)
 
 
-@dataclass
 class AppStarting(Event):
     pass
 
 
-@dataclass
 class AppStarted(Event):
     pass
 
 
-@dataclass
 class AppStopping(Event):
     pass
 

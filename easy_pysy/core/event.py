@@ -1,8 +1,10 @@
+import json
 from dataclasses import dataclass
+from datetime import datetime
 from threading import Thread
 from typing import Type, Callable, TypeVar
 
-from easy_pysy.core.configuration import config
+from easy_pysy.core.environment import env
 from easy_pysy.core.logging import logger
 from easy_pysy.utils.common import require
 from easy_pysy.utils.functional.iterable import List
@@ -10,15 +12,28 @@ from easy_pysy.utils.inspect import qual_name
 from easy_pysy.utils.model import PropertyBaseModel
 
 
-log_file = config('ez.core.event.log_file')
-storage = config('ez.core.event.storage', config_type=bool, default=False)
+log_file = env('ez.core.event.log_file')
+rotation = env('ez.core.event.log_rotation')
+compression = env('ez.core.event.log_compression')
+retention = env('ez.core.event.log_retention')
+storage = env('ez.core.event.storage', config_type=bool, default=False)
 
 
 if log_file:
-    logger.add(log_file, format="{message}", filter=__name__, level="DEBUG")
+    logger.add(
+        log_file,
+        rotation=rotation,
+        compression=compression,
+        retention=retention,
+        format="{message}",
+        filter=__name__,
+        level="DEBUG"
+    )
 
 
 class Event(PropertyBaseModel):
+    at = datetime.now()
+
     @property
     def event_type(self):
         return qual_name(self)
@@ -52,7 +67,8 @@ def emit(event: Event):
     event_type = type(event)
 
     if log_file:
-        logger.info(event.dict())
+        message = json.dumps(event.dict(), default=str)
+        logger.info(message)
     if storage:
         events.append(event)
 

@@ -3,12 +3,12 @@ from threading import Thread, Event, Timer
 from typing import Callable, Optional
 
 from easy_pysy.utils.common import require
-from easy_pysy.core.configuration import config
+from easy_pysy.core.environment import env
 from easy_pysy.core.logging import logger
 from easy_pysy.core.lifecycle import AppStopping
 from easy_pysy.core.event import on
 
-stop_timeout = config('ez.thread.stop_timeout', config_type=int, default=1)
+stop_timeout = env('ez.thread.stop_timeout', config_type=int, default=1)
 
 
 class EzThread(Thread):  # TODO: test
