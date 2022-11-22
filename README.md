@@ -3,8 +3,6 @@ easy-pysy
 
 # TODO:
 ## Features
-- [ ] Exception in app should stop uvicorn
-- [ ] Error: Missing command => Still running !
 - [ ] Doc : purpose, roadmap
 - [ ] repo
 - [ ] Daemon vs Run vs Start
