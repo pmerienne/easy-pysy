@@ -18,3 +18,4 @@ from easy_pysy.utils.generators import tri_wave, float_range
 from easy_pysy.utils.markdown import read_md_table
 from easy_pysy.utils.json import JSONEncoder
 from easy_pysy.utils.object import Singleton
+from easy_pysy.utils.inspect import get_methods

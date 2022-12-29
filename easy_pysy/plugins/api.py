@@ -17,6 +17,7 @@ options = fast_api.options
 head = fast_api.head
 patch = fast_api.patch
 trace = fast_api.trace
+mount = fast_api.mount
 
 
 @fast_api.on_event("shutdown")
