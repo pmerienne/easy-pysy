@@ -1,10 +1,23 @@
 import os
 from pathlib import Path
 
+from pydantic import BaseModel
 
-def get_all(components_directory: Path):
+components_directory = Path('gui/components')
+
+
+class Component(BaseModel):
+    name: str
+    url: str
+
+
+def get_components() -> list[Component]:
     return [
-        path[:-5]  # remove extension .html
+        Component(
+            name=path[:-4],  # remove extension .vue
+            url=f'components/{path}'
+
+        )
         for path in os.listdir(components_directory)
-        if path.endswith('.html')
+        if path.endswith('.vue')
     ]

@@ -6,12 +6,10 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 import easy_pysy as ez
-from easy_pysy.plugins.gui import store, component
-
-current_directory = os.path.dirname(os.path.realpath(__file__))
-# gui_static_directory = Path(current_directory) / Path('static')
-# gui_static_directory = gui_static_directory.absolute()
-gui_static_directory = Path('/home/pierre/sources/alpinejs-eel/dist/')  # TODO; change this
+from easy_pysy.plugins.gui import store, component, router
+from easy_pysy.plugins.gui.component import Component
+from easy_pysy.plugins.gui.router import Route
+from easy_pysy.plugins.gui.store import StoreConfig
 
 
 # TODO: broadwast changes (see https://fastapi.tiangolo.com/advanced/websockets/#handling-disconnections-and-multiple-clients)
@@ -22,14 +20,19 @@ class RPCResponse(BaseModel):
     changes: list
 
 
-@ez.api.get("/ez-gui/stores")
-def get_stores():
-    return store.get_config()
+class GuiAppConfig(BaseModel):
+    components: list[Component]
+    routes: list[Route]
+    stores: list[StoreConfig]
 
 
-@ez.api.get("/ez-gui/components")
-def get_components():
-    return component.get_all(components_directory)
+@ez.api.get("/ez-gui/config")
+def get_config():
+    return GuiAppConfig(
+        components=component.get_components(),
+        routes=router.get_routes(),
+        stores=store.get_all()
+    )
 
 
 @ez.api.post("/ez-gui/stores/{store_name}/{method_name}")
@@ -38,7 +41,12 @@ def rpc_endpoint(store_name: str, method_name: str, arguments: list):
     return RPCResponse(result=result, changes=changes)
 
 
-components_directory = Path('gui/components')
+
+current_directory = os.path.dirname(os.path.realpath(__file__))
+# gui_static_directory = Path(current_directory) / Path('static')
+# gui_static_directory = gui_static_directory.absolute()
+gui_static_directory = Path('/home/pierre/sources/ez-gui-vuejs/dist/')  # TODO; change this
+
 
 # TODO: not here ?
 @ez.command(name='start-gui')

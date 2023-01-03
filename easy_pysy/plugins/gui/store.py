@@ -4,25 +4,6 @@ from dictdiffer import diff
 from pydantic import BaseModel
 
 
-class Old:
-    ez_methods: list[str] = []
-
-    def sync(self):
-        return StoreSynchronizer(self)
-
-    def transactional(self, fn):
-        self.ez_methods.append(fn.__name__)
-
-        def decorated(*args, **kwargs):
-            with self.sync():
-                # TODO: try/catch + revert
-                result = fn(*args, **kwargs)
-            return result
-        # Avoid method not found in alpine
-        decorated.__name__ = fn.__name__
-        return decorated
-
-
 class StoreSynchronizer:
     def __init__(self, store):
         self.store = store
@@ -58,7 +39,7 @@ class StoreConfig(BaseModel):
     methods: list[str]
 
 
-def get_config() -> list[StoreConfig]:
+def get_all() -> list[StoreConfig]:
     return [
         StoreConfig(name=name, data=store.dict(), methods=_get_store_method_names(store))
         for name, store in _stores.items()
