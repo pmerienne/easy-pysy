@@ -20,6 +20,8 @@ singletons: dict[Type, Any] = {}
 
 
 def provide(type: Type[T], singleton: bool = False):
+    type = remove_generic_type_parameters(type)
+
     # TODO: env and variant
     def decorator(func):
         new_provider = Provider(type, func, singleton)
@@ -34,6 +36,7 @@ def provide(type: Type[T], singleton: bool = False):
 
 
 def get(type: Type[T]) -> T:  # TODO: other name
+    type = remove_generic_type_parameters(type)
     easy_pysy.utils.decorators.require(type in providers and providers[type], f"No provider found for {type}")
     provider = providers[type][-1]
 
@@ -45,3 +48,10 @@ def get(type: Type[T]) -> T:  # TODO: other name
         return instance
     else:
         return singletons[type]
+
+
+def remove_generic_type_parameters(type: Type[T]) -> Type[T]:
+    while hasattr(type, '__origin__'):
+        type = type.__origin__
+    return type
+

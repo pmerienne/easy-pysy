@@ -1,14 +1,9 @@
 import os
 from pathlib import Path
 
-from pydantic import BaseModel
+from easy_pysy.plugins.gui.model import Component
 
-components_directory = Path('gui/components')
-
-
-class Component(BaseModel):
-    name: str
-    url: str
+components_directory = Path('client/components')
 
 
 def get_components() -> list[Component]:

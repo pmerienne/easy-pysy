@@ -1,62 +1,31 @@
-import easy_pysy as ez
-
 from dictdiffer import diff
-from pydantic import BaseModel
+
+import easy_pysy as ez
+from easy_pysy.plugins.gui.model import GuiStore, GuiStoreConfig
+
+stores: dict[str, GuiStore] = {}
 
 
-class StoreSynchronizer:
-    def __init__(self, store):
-        self.store = store
-        self.original = store.dict()
-        self.changes = None
-
-    def __enter__(self):
-        pass
-
-    def __exit__(self, *args):
-        modified = self.store.dict()
-        self.changes = diff(self.original, modified)
+def get_or_create_store(store_id: str) -> GuiStore:
+    if store_id not in stores:
+        stores[store_id] = GuiStore(id=store_id)
+    return stores[store_id]
 
 
-_stores: dict[str, BaseModel] = {}
+def get_config() -> list[GuiStoreConfig]:
+    return [GuiStoreConfig.from_store(store) for store in stores.values()]
 
 
-def add_store(name: str, store: BaseModel):
-    _stores[name] = store
+def call_store_method(store_id: str, action_name: str, args: list):
+    ez.info(f'Calling {action_name} with {args} on {store_id}')
 
+    ez.require(store_id in stores, f'No store found for {store_id}')
+    store = stores[store_id]
+    function = store.get_action(action_name)
 
-def _get_store_method_names(store: BaseModel):
-    return [
-        name
-        for (name, member) in ez.get_methods(store)
-        if member.__module__ not in ('pydantic.main', 'pydantic.utils', )
-    ]
-
-
-class StoreConfig(BaseModel):
-    name: str
-    data: dict
-    methods: list[str]
-
-
-def get_all() -> list[StoreConfig]:
-    return [
-        StoreConfig(name=name, data=store.dict(), methods=_get_store_method_names(store))
-        for name, store in _stores.items()
-    ]
-
-
-def call_store_method(store_name: str, method_name: str, args: list):
-    ez.info(f'Calling {method_name} with {args} on {store_name}')
-
-    ez.require(store_name in _stores, f'No store found with name {store_name}')
-    ez.require(hasattr(_stores[store_name], method_name), f'No method found on store {store_name} with name: {method_name}')
-    store = _stores[store_name]
-    func = getattr(_stores[store_name], method_name)
-
-    original = store.dict()
-    result = func(*args)
-    modified = store.dict()
+    original = store.get_jsonable_data()
+    result = function(*args)
+    modified = store.get_jsonable_data()
     changes = diff(original, modified)
 
     return result, changes

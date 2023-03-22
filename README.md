@@ -5,7 +5,11 @@ easy-pysy
 ## Features
 - [ ] Doc : purpose, roadmap
 - [ ] repo
-- [ ] Daemon vs Run vs Start
+- [ ] Daemon vs Run vs Start => BIG MESS RIGHT NOW
+- [ ] Gui
+  - [ ] Chrome web app
+  - [ ] call_store_method => Real fastapi for serialization
+  - [ ] index.html
 
 # Getting Started
 ## Cheat sheet

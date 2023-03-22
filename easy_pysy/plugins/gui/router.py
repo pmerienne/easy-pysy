@@ -1,15 +1,9 @@
 import os
 from pathlib import Path
 
-from pydantic import BaseModel
+from easy_pysy.plugins.gui.model import Route
 
-
-class Route(BaseModel):
-    path: str
-    url: str
-
-
-pages_directory = Path('gui/pages')
+pages_directory = Path('client/pages')
 dynamic_routes: list[Route] = []
 
 
