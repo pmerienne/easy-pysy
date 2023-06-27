@@ -8,6 +8,7 @@ from easy_pysy.core.provider import get, provide
 from easy_pysy.core.thread import Interval
 from easy_pysy.plugins import api
 from easy_pysy.plugins.loop import loop, Loop, get_loop
+from easy_pysy.plugins.repository import Repository, transactional, current_session
 from easy_pysy.utils.common import uuid, IntSequence
 from easy_pysy.utils.decorators import require
 from easy_pysy.utils.decorators import retry
