@@ -4,8 +4,8 @@ from typing import Callable, Tuple
 
 from pydantic import BaseModel, Field
 
-from easy_pysy.core_oop.component import Component
-from easy_pysy.core_oop.plugin import Plugin
+from easy_pysy.core.component import Component
+from easy_pysy.core.plugin import Plugin
 from easy_pysy.utils.inspect import qual_name
 
 
@@ -57,6 +57,9 @@ class EventBus(Plugin):
                     self.subscribers[event_type] = []
 
                 self.subscribers[event_type].append((component, subscriber))
+
+    def stop(self):
+        self.subscribers.clear()
 
 
 def get_event_subscribers(component: Component) -> list[EventSubscriber]:

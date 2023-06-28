@@ -1,11 +1,8 @@
-import uvicorn
-from fastapi import HTTPException, APIRouter, Request, FastAPI
+from fastapi import HTTPException, FastAPI
 from pydantic import BaseModel, Field
+from starlette.testclient import TestClient
 
-import easy_pysy as ez
-from easy_pysy import uuid
-from easy_pysy.core_oop.app import EzApp, current_app
-from easy_pysy.core_oop.component import Singleton
+from easy_pysy import uuid, EzApp, Singleton, require
 
 
 class Message(BaseModel):
@@ -34,7 +31,7 @@ api = FastAPI(lifespan=app.fast_api_lifespan)
 def get_message(uuid: str) -> Message:
     repository = app.container.get(MessageRepository)
 
-    ez.require(repository.contains(uuid), exception=HTTPException(status_code=404, detail="Foo not found"))
+    require(repository.contains(uuid), exception=HTTPException(status_code=404, detail="Foo not found"))
     return repository.get(uuid)
 
 
@@ -46,6 +43,15 @@ def save(message: Message) -> Message:
     return message
 
 
-if __name__ == '__main__':
-    uvicorn.run(api, host='0.0.0.0', port=5000)
+def test_get_and_post():
+    with TestClient(api) as client:
+        response = client.get('/messages/42')
+        assert response.status_code == 404
 
+        response = client.post('/messages', json={"content": "Hello"})
+        assert response.status_code == 200
+        created = response.json()
+
+        response = client.get(f'/messages/{created["id"]}')
+        assert response.status_code == 200
+        assert response.json() == {"id": created["id"], "content": "Hello"}

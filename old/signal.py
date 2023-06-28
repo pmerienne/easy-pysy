@@ -2,7 +2,8 @@ import signal
 from typing import Callable, Optional
 
 from easy_pysy.utils.common import require
-from easy_pysy.core import logging
+from easy_pysy.utils import logging
+
 
 exiting = False
 _sigint_callback: Optional[Callable[[int], None]] = None

@@ -1,8 +1,8 @@
 import enum
 
-from easy_pysy.core import logging
-from easy_pysy.core.event import Event, emit
-from easy_pysy.core.signal import sigint_callback
+from easy_pysy.old import logging
+from easy_pysy.old.event import Event, emit
+from easy_pysy.old.signal import sigint_callback
 from easy_pysy.utils.common import require
 
 

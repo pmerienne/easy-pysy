@@ -1,7 +1,6 @@
 from typing import ClassVar
 
-from easy_pysy.core_oop.app import EzApp
-from easy_pysy.core_oop.component import Component, Singleton
+from easy_pysy import EzApp, Component, Singleton
 
 
 def test_inject_dependencies():

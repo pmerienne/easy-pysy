@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import TypeVar, Type, Callable, Generic, Any
 
 import easy_pysy.utils.decorators
-from easy_pysy.core import logging
+from easy_pysy.old import logging
 
 T = TypeVar('T')
 ProviderFactory = Callable[[], T]

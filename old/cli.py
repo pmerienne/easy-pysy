@@ -1,6 +1,6 @@
 import typer
-from easy_pysy.core.lifecycle import start, stop, context, AppState
-from easy_pysy.core import logging
+from easy_pysy.old.lifecycle import start, stop, context, AppState
+from easy_pysy.old import logging
 
 main_typer = typer.Typer()
 # main_typer.add_typer(run_typer, name="run")

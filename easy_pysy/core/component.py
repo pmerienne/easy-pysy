@@ -14,6 +14,9 @@ class Component(BaseModel):
     def start(self):
         pass
 
+    def stop(self):
+        pass
+
 
 class Singleton(Component):
     profile: ClassVar[str] = '*'

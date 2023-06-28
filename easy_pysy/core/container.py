@@ -3,10 +3,8 @@ from typing import TypeVar, Any
 from pydantic import BaseModel, Field
 from pydantic.utils import lenient_issubclass
 
-from easy_pysy.core_oop.bus import EventBus
-from easy_pysy.core_oop.component import Component, Singleton, PostProcessor
-from easy_pysy.core_oop.environment import EnvField, Environment
-from easy_pysy.core_oop.plugin import Plugin
+from easy_pysy.core.component import Component, Singleton, PostProcessor
+from easy_pysy.core.environment import EnvField, Environment
 
 T = TypeVar('T', bound=Component)
 ComponentType = type[T]
@@ -16,13 +14,20 @@ class Container(BaseModel):  # TODO: rename (conflict with typing.Container)
     environment: Environment
     components: list[ComponentType]
 
+    instances: list[Component] = Field(default_factory=list)
     singleton_instances: dict[type[Component], Component] = Field(default_factory=dict)
-    post_processors: list[PostProcessor] = Field(default_factory=list)
 
     def start(self):
         for component_type in self.components:
             if not component_type.lazy and component_type.has_profile(self.environment.profile):
                 self.get(component_type)  # Will instantiate component
+
+    def stop(self):
+        for instance in self.instances:
+            instance.stop()
+
+        self.instances.clear()
+        self.singleton_instances.clear()
 
     def get(self, component_type: ComponentType) -> T:
         component_type = self._get_implementation_type(component_type)
@@ -47,15 +52,17 @@ class Container(BaseModel):  # TODO: rename (conflict with typing.Container)
         environment_fields = self._get_environment_fields(component_type)
 
         instance = component_type(**dependencies, **environment_fields)
+        self.instances.append(instance)
 
         for post_processor in self.post_processors:
             post_processor.post_init(instance)
 
-        if isinstance(instance, PostProcessor):
-            self.post_processors.append(instance)
-
         instance.start()
         return instance
+
+    @property
+    def post_processors(self):
+        return [instance for instance in self.instances if isinstance(instance, PostProcessor)]
 
     def _get_dependencies(self, component_type: ComponentType) -> dict[str, Component]:
         return {

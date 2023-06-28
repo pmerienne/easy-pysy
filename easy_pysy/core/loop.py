@@ -4,9 +4,11 @@ from typing import Callable
 
 from pydantic import BaseModel, Field
 
-from easy_pysy import require, Interval
-from easy_pysy.core_oop.component import PostProcessor, Component
-from easy_pysy.core_oop.plugin import Plugin
+from easy_pysy.core.component import Component
+from easy_pysy.core.plugin import Plugin
+from easy_pysy.utils import logging
+from easy_pysy.utils.common import require
+from easy_pysy.utils.thread import Interval
 
 
 def loop(every_ms: int, stop_app_on_error=True, auto_start=True):
@@ -43,6 +45,12 @@ class LoopManager(Plugin):
         for loop in get_loops(component):
             self.start_loop(component, loop)  # TODO: if auto_start
 
+    def stop(self):
+        for interval in self.intervals.values():
+            interval.stop()
+
+        self.intervals.clear()
+
     def start_loop(self, component: Component, loop: Loop):
         require(loop not in self.intervals, "Loop is already running")
 
@@ -63,9 +71,10 @@ class LoopManager(Plugin):
         # ez.emit(LoopStopped(loop=self))
 
     def on_error(self, exception: BaseException):
-        ez.exception(f'Loop execution failed: {exception}')
+        logging.exception(f'Loop execution failed: {exception}')
         if self.stop_app_on_error:
             ez.shutdown()
+
 
     class Config:
         arbitrary_types_allowed = True

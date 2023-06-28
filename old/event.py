@@ -4,8 +4,8 @@ from datetime import datetime
 from threading import Thread
 from typing import Type, Callable, TypeVar
 
-from easy_pysy.core.environment import env
-from easy_pysy.core.logging import logger
+from easy_pysy.old.environment import env
+from easy_pysy.old.logging import logger
 from easy_pysy.utils.common import require
 from easy_pysy.utils.functional.iterable import List
 from easy_pysy.utils.inspect import qual_name
@@ -37,9 +37,6 @@ class Event(PropertyBaseModel):
     @property
     def event_type(self):
         return qual_name(self)
-
-    class Config:
-        arbitrary_types_allowed = True
 
 
 @dataclass

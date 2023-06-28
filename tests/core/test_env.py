@@ -3,9 +3,7 @@ from datetime import datetime, date
 from pendulum.tz.timezone import Timezone
 from pydantic import BaseSettings, Field
 
-from easy_pysy.core_oop.app import EzApp
-from easy_pysy.core_oop.component import Component, Singleton
-from easy_pysy.core_oop.environment import EnvField
+from easy_pysy import EzApp, Component, EnvField
 
 
 def test_env_field():

@@ -1,40 +1,75 @@
-import time
-from dataclasses import dataclass
+from pydantic import Field
 
-import easy_pysy as ez
-
-COUNTERS = {"sync": 0, "async": 0}
+from easy_pysy import EzApp, Service, Event, EventBus, on
 
 
-class PingEvent(ez.Event):
+class PingEvent(Event):
     message: str
 
 
-@ez.on(PingEvent)
-def pong_increase(event: PingEvent):
-    COUNTERS['sync'] = COUNTERS['sync'] + 1
+class PongEvent(Event):
+    message: str
 
 
-@ez.on(PingEvent, asynchronous=True)
-def pong_increase_async(event: PingEvent):
-    time.sleep(0.100)
-    COUNTERS['async'] = COUNTERS['async'] + 1
+class Player1(Service):
+    bus: EventBus
+    received: list[PongEvent] = Field(default_factory=list)
+
+    def play(self):
+        self.bus.emit(PingEvent(message='Ping from player 1'))
+
+    @on(PongEvent)
+    def on_pong(self, pong: PongEvent):
+        self.received.append(pong)
 
 
-def test_ping_pong(ez_app):
-    # When an event is emitted
-    ez.emit(PingEvent(message='Hello'))
+class Player2(Service):
+    bus: EventBus
+    received: list[PingEvent] = Field(default_factory=list)
 
-    # Then synchronous subscribers have been notified
-    assert COUNTERS['sync'] == 1
+    def play(self):
+        self.bus.emit(PongEvent(message='Pong from player 2'))
 
-    # And asynchronous subscribers too
-    time.sleep(0.2)
-    assert COUNTERS['async'] == 1
+    @on(PingEvent)
+    def on_pong(self, ping: PingEvent):
+        self.received.append(ping)
 
+
+def test_ping_pong():
+    app = EzApp(components=[Player1, Player2])
+    app.start()
+
+    player_1 = app.container.get(Player1)
+    player_2 = app.container.get(Player2)
+    assert player_1.received == player_2.received == []
+
+    player_1.play()
+    assert len(player_2.received) == 1
+    assert player_2.received[0].message == 'Ping from player 1'
+
+    player_2.play()
+    assert len(player_1.received) == 1
+    assert player_1.received[0].message == 'Pong from player 2'
+
+
+def test_call_decorated_method():
+    app = EzApp(components=[Player1, Player2])
+    app.start()
+
+    player_1 = app.container.get(Player1)
+    player_1.on_pong(PongEvent(message='PONG'))
+
+    assert len(player_1.received) == 1
+    assert player_1.received[0].message == 'PONG'
+
+
+
+# TODO: log/store events
+def test_store_events():
     # And it has been logged
-    events = ez.event.find_by_type(PingEvent)
-    assert events == [PingEvent(message='Hello')]
+    # events = ez.event.find_by_type(PingEvent)
+    # assert events == [PingEvent(message='Hello')]
+    pass
 
 
 # TODO: app lifecycle event
