@@ -1,6 +1,7 @@
 from typing import ClassVar
 
 from easy_pysy import EzApp, Component, Singleton
+from easy_pysy.core.component import Inject
 
 
 def test_inject_dependencies():
@@ -8,7 +9,7 @@ def test_inject_dependencies():
         power: float = 100
 
     class Machina(Singleton):
-        heater: Heater
+        heater: Heater = Inject()
 
     app = EzApp(components=[Machina, Heater])
     app.start()

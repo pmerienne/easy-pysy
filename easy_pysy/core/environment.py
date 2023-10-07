@@ -10,24 +10,24 @@ from pydantic.fields import FieldInfo, ModelField
 # TODO: dict and list
 SupportedTypes = Union[str, int, float, bool, datetime, date]
 
-dotenv_path = os.getenv('DOTENV_PATH') or find_dotenv(usecwd=True)
-load_dotenv(dotenv_path)
-
-profile = os.getenv('EZ_PROFILE')
-profile_dotenv_path = find_dotenv(filename=f'.env.{profile}', usecwd=True)
-load_dotenv(profile_dotenv_path)
-
 
 class EnvField(FieldInfo):
     pass
 
 
 class Environment(BaseModel):  # TODO: class not need !! Should be an util ? but we should move container env logic here !
-    _profile: str
+    _profile: str  # TODO: you dont need a private attr
 
     def __init__(self, **data):
         super().__init__(**data)
-        self._profile = get_environment_variable('EZ_PROFILE')
+        self._profile = data.pop('profile') or get_environment_variable('EZ_PROFILE')
+
+    def start(self):
+        dotenv_path = os.getenv('DOTENV_PATH') or find_dotenv(usecwd=True)
+        load_dotenv(dotenv_path)
+
+        profile_dotenv_path = find_dotenv(filename=f'.env.{self.profile}', usecwd=True)
+        load_dotenv(profile_dotenv_path)
 
     @property
     def profile(self):
@@ -35,13 +35,14 @@ class Environment(BaseModel):  # TODO: class not need !! Should be an util ? but
 
     def get_from_field(self, field: ModelField) -> Any:
         key = field.field_info.extra.get('env') or field.name.upper()
-        return get_environment_variable(key, field.type_)
+        return get_environment_variable(key, field.type_, default=field.default)
 
     class Config:
         underscore_attrs_are_private = True
 
 
 def get_environment_variable(key: str, type_: Type[SupportedTypes] = str, default=None, raise_if_not_found=False) -> SupportedTypes:
+    # TODO: case insensitive
     raw = os.getenv(key)
 
     if raw is None and raise_if_not_found:

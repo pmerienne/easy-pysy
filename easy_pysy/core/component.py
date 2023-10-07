@@ -1,9 +1,21 @@
 from typing import ClassVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from pydantic.fields import FieldInfo
 
 
-class Component(BaseModel):
+class Inject(FieldInfo):
+    def __init__(self, *args, **kwargs):
+        kwargs['exclude'] = True
+        super().__init__(*args, **kwargs)
+
+
+class Injectable(BaseModel):
+    class Config:
+        keep_untouched = (Inject, )
+
+
+class Component(Injectable):
     profile: ClassVar[str] = '*'
     lazy: ClassVar[bool] = True
 
@@ -17,13 +29,12 @@ class Component(BaseModel):
     def stop(self):
         pass
 
+    class Config:
+        arbitrary_types_allowed = True
+
 
 class Singleton(Component):
     profile: ClassVar[str] = '*'
-
-
-class Service(Singleton):
-    lazy: ClassVar[bool] = False
 
 
 class PostProcessor(Component):

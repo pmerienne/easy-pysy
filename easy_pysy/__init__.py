@@ -1,10 +1,13 @@
 # Core
 from easy_pysy.core.app import AppStopping, EzApp, AppStarted
-from easy_pysy.core.component import Component, Singleton, Service
+from easy_pysy.core.component import Component, Singleton
+from easy_pysy.core.service import Service
 from easy_pysy.core.plugin import Plugin
 from easy_pysy.core.bus import Event, EventBus, on
 from easy_pysy.core.environment import EnvField
 from easy_pysy.core.loop import loop, LoopManager
+from easy_pysy.core.context import get, inject, current_app, set_current_app
+# TODO: inject = get !! I can't decide which one I prefer !
 
 
 # Utils

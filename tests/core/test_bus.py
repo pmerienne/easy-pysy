@@ -1,6 +1,7 @@
 from pydantic import Field
 
 from easy_pysy import EzApp, Service, Event, EventBus, on
+from easy_pysy.core.component import Inject
 
 
 class PingEvent(Event):
@@ -12,7 +13,7 @@ class PongEvent(Event):
 
 
 class Player1(Service):
-    bus: EventBus
+    bus: EventBus = Inject()
     received: list[PongEvent] = Field(default_factory=list)
 
     def play(self):
@@ -24,7 +25,7 @@ class Player1(Service):
 
 
 class Player2(Service):
-    bus: EventBus
+    bus: EventBus = Inject()
     received: list[PingEvent] = Field(default_factory=list)
 
     def play(self):

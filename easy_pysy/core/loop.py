@@ -4,6 +4,7 @@ from typing import Callable
 
 from pydantic import BaseModel, Field
 
+from easy_pysy.core.environment import EnvField
 from easy_pysy.core.component import Component
 from easy_pysy.core.plugin import Plugin
 from easy_pysy.utils import logging
@@ -39,6 +40,7 @@ class Loop(BaseModel):
 
 
 class LoopManager(Plugin):
+    stop_app_on_error: bool = EnvField(env='ez_loop_stop_app_on_error', default=False)
     intervals: dict[Loop, Interval] = Field(default_factory=dict)
 
     def post_init(self, component: Component):
@@ -73,8 +75,7 @@ class LoopManager(Plugin):
     def on_error(self, exception: BaseException):
         logging.exception(f'Loop execution failed: {exception}')
         if self.stop_app_on_error:
-            ez.shutdown()
-
+            ez.shutdown()  # TODO !!
 
     class Config:
         arbitrary_types_allowed = True

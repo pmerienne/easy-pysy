@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/jpg" href="/ui/assets/favicon.jpg" />
+
+        <script defer src="/ui/static/ez-ui.min.js"></script>
+        <!-- TODO: not needed ? -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.22/dist/css/uikit.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- TODO: Bulma as dependencies (event for body not only elements! ) -->
+        <!--
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        -->
+
+    </head>
+    <body class="uk-height-viewport">
+        <nav-bar></nav-bar>
+        <ez-router-view x-ref="routerView"></ez-router-view>
+    </body>
+</html>

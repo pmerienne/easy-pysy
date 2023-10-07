@@ -1,0 +1,60 @@
+<template>
+    <div class="uk-container uk-margin-small-top">
+        <article class="uk-article">
+            <h1 class="uk-article-title">Visits</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+
+            <table class="uk-table uk-table-hover uk-table-divider">
+                <thead>
+                <tr>
+                    <th class="uk-table-shrink">Date</th>
+                    <th class="uk-table-shrink">Owner</th>
+                    <th class="uk-table-expand">Pet</th>
+                    <th class="">Info</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <template x-for="visit in visits">
+                        <tr>
+                            <td x-text="new Date(visit.at).toLocaleString()"></td>
+                            <td>
+                                <img x-bind:src="`https://api.dicebear.com/6.x/thumbs/png?seed=${visit.pet.owner_id}`" width="40">
+                            </td>
+                            <td x-text="visit.pet.name"></td>
+                            <td>
+                                <ul class="uk-iconnav">
+                                    <li>
+                                        <a :href="`/visits/${visit.id}`" x-router-link>
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a :href="`/pets/${visit.pet.id}`" x-router-link>
+                                            <i class="fa fa-paw"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a :href="`/owners/${visit.pet.owner_id}`" x-router-link>
+                                            <i class="fa fa-user"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+
+
+            <p class="uk-article-meta">
+                Results are limited to 5 visits.
+
+                <a class="uk-button uk-button-text" href="/visits" x-router-link>
+                    See more
+                </a>
+            </p>
+        </article>
+
+    </div>
+</template>

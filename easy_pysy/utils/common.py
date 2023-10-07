@@ -27,3 +27,6 @@ class IntSequence:
     def create_new_id(self) -> int:
         self._last_id += 1
         return self._last_id
+
+    def create_new_str_id(self):
+        return str(self.create_new_str_id())

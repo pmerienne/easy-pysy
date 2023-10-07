@@ -2,11 +2,20 @@ easy-pysy
 ==
 
 # TODO:
-## Features
+- [x] Fast API => inside
+- [x] CLI => inside
+- [ ] UI
+
+- [ ] CLEANUP
+  - [ ] Plugins !
+  - [ ] Configuration = Plugin(config=frfrf) instead of Plugin ?
+- [ ] Daemon vs Run vs Start
 - [ ] Doc : purpose, roadmap
 - [ ] repo
-- [ ] Daemon vs Run vs Start
 
+**Bugs**
+- [ ] Multiple static
+- [ ] Pet -> save /cancel multiple !!
 # Getting Started
 ## Cheat sheet
 ```bash
