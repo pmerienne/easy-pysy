@@ -4,13 +4,12 @@ from datetime import datetime
 from threading import Thread
 from typing import Type, Callable, TypeVar
 
+from pydantic import BaseModel
+
 from easy_pysy.core.environment import env
 from easy_pysy.core.logging import logger
 from easy_pysy.utils.common import require
 from easy_pysy.utils.functional.iterable import List
-from easy_pysy.utils.inspect import qual_name
-from easy_pysy.utils.model import PropertyBaseModel
-
 
 log_file = env('ez.core.event.log_file')
 rotation = env('ez.core.event.log_rotation')
@@ -31,12 +30,8 @@ if log_file:
     )
 
 
-class Event(PropertyBaseModel):
+class Event(BaseModel):
     at = datetime.now()
-
-    @property
-    def event_type(self):
-        return qual_name(self)
 
     class Config:
         arbitrary_types_allowed = True
