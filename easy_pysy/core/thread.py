@@ -41,27 +41,39 @@ class EzThread(Thread):  # TODO: test
             threads.remove(self)
 
 
-class Interval(Timer):
-    def __init__(self, interval_ms, function, on_error, args=(), kwargs=None):
-        super().__init__(
-            interval_ms / 1000.0,
-            function,
-            args=args,
-            kwargs=kwargs or {},
-        )
+class Interval:
+    def __init__(self, interval_ms: float, function: Callable, on_error: Callable, *args, **kwargs):
+        self.interval_ms = interval_ms
+        self.function = function
         self.on_error = on_error
+        self.args = args
+        self.kwargs = kwargs
+        self.timer: Optional[Timer] = None
+        self.start()
 
-    def run(self):
-        next_time = time.time() + self.interval
-        wait_time = next_time - time.time()
-        while not self.finished.wait(wait_time):
-            try:
-                next_time += self.interval
-                self.function(*self.args, **self.kwargs)
-                wait_time = next_time - time.time()
-            except BaseException as exc:
-                self.on_error(exc)
-                wait_time = next_time - time.time()
+    def _run(self):
+        self._schedule_next_run()
+        try:
+            self.function(*self.args, **self.kwargs)
+        except Exception as exc:
+            self.on_error(exc)
+
+    def start(self):
+        if not self.running:
+            self._schedule_next_run()
+
+    def _schedule_next_run(self):
+        self.timer = Timer(self.interval_ms / 1000.0, self._run)
+        self.timer.start()
+
+    def stop(self):
+        if self.timer is not None:
+            self.timer.cancel()
+            self.timer = None
+
+    @property
+    def running(self):
+        return self.timer is not None
 
 
 class ZombieThread(Exception):

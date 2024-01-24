@@ -20,7 +20,7 @@ class Loop:
         ez.emit(LoopStarted(loop=self))
 
     def stop(self):
-        self.interval.cancel()
+        self.interval.stop()
         self.interval = None
         ez.emit(LoopStopped(loop=self))
 
@@ -31,7 +31,7 @@ class Loop:
 
     @property
     def running(self):
-        return self.interval is not None and self.interval.is_alive()
+        return self.interval is not None and self.interval.running
 
 
 class LoopStarted(ez.Event):
